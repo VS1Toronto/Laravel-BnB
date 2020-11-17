@@ -1,0 +1,7 @@
+-----------
+Set Sanctum
+-----------
+
+
+https://blog.codecourse.com/setting-up-laravel-sanctum-airlock-for-spa-authentication-with-vue/
+

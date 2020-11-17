@@ -1,0 +1,6 @@
+
+
+
+//	Font Awesome CDN
+//
+<script src="https://kit.fontawesome.com/e1345bac8d.js" crossorigin="anonymous"></script>

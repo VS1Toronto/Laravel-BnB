@@ -1,0 +1,115 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+HOW TO CLEAR CACHE AND SET FOR ONLINE SHARED SERVER
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Online Tutorial For Clearing Cache
+
+https://www.pkbhandari.com/laravel-clear-cache-file-manually-if-command-not-supported/
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Laravel Clearing Cache Stack Overflow
+
+https://stackoverflow.com/questions/43026069/always-have-to-clear-cache-in-env
+
+
+
+
+Check APP_ENV in your .env file. If it's on production then yes, laravel caching it. You should run these commands before changing configs:
+
+php artisan cache:clear
+php artisan config:clear
+php artisan route:clear
+And then after changes run these:
+
+php artisan config:cache
+php artisan route:cache
+php artisan optimize
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Laravel Clearing Cache Stack Overflow Code For Online web.php
+
+https://stackoverflow.com/questions/31455829/laravel-5-clear-cache-in-shared-hosting-server
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//  ROUTES TO OPERATE ARTISAN ON SHARED SERVER
+//
+
+
+//	Reoptimized class loader:
+//
+ Route::get('optimize', function() {
+     Artisan::call('optimize');
+     return '<h1>Reoptimized class loader</h1>';
+});
+
+
+
+// clear application cache:
+//
+Route::get('clear-cache', function() {
+    Artisan::call('cache:clear');
+    return "<h1>Application cache flushed</h1>";
+});
+
+
+
+//  Clear Route cache:
+//
+Route::get('route-clear', function() {
+    Artisan::call('route:clear');
+    return '<h1>Route cache cleared</h1>';
+});
+
+
+//  Clear View cache:
+//
+Route::get('view-clear', function() {
+    Artisan::call('view:clear');
+    return '<h1>View cache cleared</h1>';
+});
+
+
+//  Clear Config cache:
+//
+Route::get('config-cache', function() {
+    Artisan::call('config:cache');
+    return '<h1>Clear Config cleared</h1>';
+});
+
+
+//  Route cache:
+//
+Route::get('route-cache', function() {
+    Artisan::call('route:cache');
+    return '<h1>Routes cached</h1>';
+});
+
+
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------

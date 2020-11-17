@@ -1,0 +1,261 @@
+-------------------------------------------------------------------------
+Commit project to Github using VS Code with the GitBash terminal embedded
+-------------------------------------------------------------------------
+
+
+//	Github commit tutorial
+//
+https://www.youtube.com/watch?v=Fk12ELJ9Bww
+
+
+
+//	Git is a distributed version control system use this command to check your Git version
+//
+$ git --version
+
+
+------
+Result
+------
+
+
+	git version 2.14.1.windows.1
+
+
+//	Any Git version over 2.0 is acceptable
+//
+
+
+
+--------------------
+Check Git is enabled
+--------------------
+
+
+In the header menu bar go to File - Preferences - Settings
+
+In the search text box type :
+
+
+git enabled
+
+
+On the menu options scroll down to :
+
+
+Git:Enabled
+
+
+This option should have a tick in it indicating it is enabled
+
+
+
+------
+Step 1
+------
+
+
+In VS Code using GitBash Termianl
+
+
+//	Change Github Username through GitBash Terminal
+//
+$ git config --global user.name "VS1Toronto"
+
+
+
+//	Change Github Email through GitBash Terminal
+//
+$ git config --global user.email VS1Toronto@hotmail.com
+
+
+------
+Step 2
+------
+
+
+Create New Repository on GitHub
+
+
+Click Icon on the top right of screen and select   Your Repositories
+
+
+
+------
+Step 3
+------
+
+
+Click green button on the top right that has the text   New
+
+
+
+------
+Step 4
+------
+
+
+Give it a name   in this example it is     VS1Toronto/LaravelLibrary
+
+
+
+------
+Step 5
+------
+
+
+You can give it a description   in this example the description is   This is a Library application made in Laravel.
+
+
+
+------
+Step 6
+------
+
+
+Public    -   Means everyone can view it   This option is free because it is contributing to the community
+
+Private   -   Means only you and any collaborators on the project can view it   *** WARNING ***   This option costs monry
+
+
+
+------
+Step 7
+------
+
+
+To create repository press the green button that has the text   Create repository
+
+
+
+------
+Step 8
+------
+
+
+Once created you will be taken to a screen that offers instructions on how to use commands for it but in this example Visual Studio Code will be used.
+
+From this same page copy the Url which is where the repository lives online
+
+In this Example :
+
+https://github.com/VS1Toronto/LaravelLibrary
+
+
+
+------
+Step 9
+------
+
+
+To create a new repository on the command line in GitBash follow these steps
+
+
+echo "# Laravel-Blog-One" >> README.md
+
+git init
+
+git add README.md
+
+git add -A
+
+git commit -m "First Commit"
+
+git remote add origin https://github.com/VS1Toronto/Laravel-Blog-One.git
+
+git push -u origin master
+
+
+
+
+
+
+After the last command you will be asked in the termainsl for your Github username and GitHub password
+
+Enter each and press enter after each one and the Push to GitHub repository will then take place
+
+
+
+-------
+Step 10
+-------
+
+
+After the terminal messages have concluded refresh the repository page in GitHub and you will see the First Commit
+
+
+
+
+-------
+Step 11
+-------
+
+
+To confirm all the changes left click the Source control icon on the left hand options panel which looks like a FLux Capacitor
+
+Next left click the tick in the options at the top and click yes in the pop up box
+
+Next add a commit message in the pop up text box in this example   Second Commit     then press Enter
+
+Then click the Stage icon which is the + sign at the top of the list.
+
+
+
+This stages the new commits and then in GitBash terminal you follow the steps below :
+
+
+
+git init
+
+git add README.md
+
+git commit -m "Second Commit"
+
+git push -u origin master
+
+
+
+
+After the last command you will be asked in the termainsl for your Github username and GitHub password
+
+Enter each and press enter after each one and the Push to GitHub repository will then take place
+
+
+
+-------
+Step 12
+-------
+
+
+After the terminal messages have concluded refresh the repository page in GitHub and you will see the Second Commit
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+To delete a repository on GitHub
+
+
+
+1  Login to your account.
+
+2  Click on Repositories.
+
+3  Select your Repository (that you wants to delete)
+
+4  Click on settings tab.
+
+5  Scroll down to "Danger Zone" block.
+
+6  Click on "Delete this repository" button.
+
+7  Type the repository name (that you wants to delete)   example  :  VS1Toronto/KotlinYouTube
+
+8  Now click "I understand the consequences, delete this repository" button.
+
+
+
+
+
+

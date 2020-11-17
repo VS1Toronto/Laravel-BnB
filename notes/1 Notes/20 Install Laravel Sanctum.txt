@@ -1,0 +1,478 @@
+================================================================================================================================================================================================
+ADD LARAVEL SANCTUM WHICH IS A NEW LIGHT WEIGHT WAY TO AUTHETICATE A LARAVEL VUE SPA APPLICATION
+================================================================================================================================================================================================
+
+
+//	Install Laravel Sanctum via Composer using this command
+//
+$ composer require laravel/sanctum
+
+
+
+
+
+//	Next, you should publish the Sanctum configuration and migration files using 
+//	the   vendor:publish Artisan   command and the sanctum configuration file will be placed in your config directory
+//
+$ php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
+
+
+
+
+//	Next you should run your database migrations. Sanctum will create one database table in which to store API tokens
+//
+$ php artisan migrate
+
+
+
+
+
+//	Next, if you plan to utilize Sanctum to authenticate an SPA, you should add
+//	Sanctum's middleware to your api middleware group within your app/Http/Kernel.php file
+//
+
+
+
+//	Add this using statement at the top of the file
+//
+
+
+	use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+
+
+
+
+Next find the code :
+
+
+    protected $middlewareGroups = [
+        'web' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        'api' => [
+            'throttle:60,1',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+
+
+
+
+
+Change to :
+
+
+
+    protected $middlewareGroups = [
+        'web' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        'api' => [
+            EnsureFrontendRequestsAreStateful::class,
+            'throttle:60,1',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+
+//	This will set Laravel Sanctum up to use localhost at 127.0.0.1 and the Laravel Development server at 127.0.0.1:8000
+//
+
+	
+    /*
+    |--------------------------------------------------------------------------
+    | Stateful Domains
+    |--------------------------------------------------------------------------
+    |
+    | Requests from the following domains / hosts will receive stateful API
+    | authentication cookies. Typically, these should include your local
+    | and production domains which access your API via a frontend SPA.
+    |
+    */
+
+    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', 'localhost,127.0.0.1,127.0.0.1:8000,::1')),
+	
+	
+	
+	
+	
+//	To run this on a production server you have to open your   .env   file and add the production server domain name there
+//
+
+Example with Laravel Sanctum added at the end :
+
+
+
+	APP_NAME=Laravel
+	APP_ENV=local
+	APP_KEY=base64:4q2vl8Si1p9L7hOGIWKXI9MiCyRP8z+OG2vfMdL1eZk=
+	APP_DEBUG=true
+	APP_URL=http://localhost
+
+	LOG_CHANNEL=stack
+
+	DB_CONNECTION=mysql
+	DB_HOST=127.0.0.1
+	DB_PORT=3306
+	DB_DATABASE=laravel_bnb
+	DB_USERNAME=root
+	DB_PASSWORD=
+
+	BROADCAST_DRIVER=log
+	CACHE_DRIVER=file
+	QUEUE_CONNECTION=sync
+	SESSION_DRIVER=file
+	SESSION_LIFETIME=120
+
+	REDIS_HOST=127.0.0.1
+	REDIS_PASSWORD=null
+	REDIS_PORT=6379
+
+	MAIL_MAILER=smtp
+	MAIL_HOST=smtp.mailtrap.io
+	MAIL_PORT=2525
+	MAIL_USERNAME=null
+	MAIL_PASSWORD=null
+	MAIL_ENCRYPTION=null
+	MAIL_FROM_ADDRESS=null
+	MAIL_FROM_NAME="${APP_NAME}"
+
+	AWS_ACCESS_KEY_ID=
+	AWS_SECRET_ACCESS_KEY=
+	AWS_DEFAULT_REGION=us-east-1
+	AWS_BUCKET=
+
+	PUSHER_APP_ID=
+	PUSHER_APP_KEY=
+	PUSHER_APP_SECRET=
+	PUSHER_APP_CLUSTER=mt1
+
+	MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+	MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+	SANCTUM_STATEFUL_DOMAINS=localhost,127.0.0.1,127.0.0.1:8000,{ YOUR OTHER DOMAIN HERE }
+
+
+
+
+
+//	Remember to save
+//
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+
+
+
+
+
+//	In order to move from localhost to a production server you have to adjust the CORS settings
+//	CORS is now in Laravel as standard under the fruitcake package so theres no need to install it only to adjust it
+//
+
+
+In directory   config/cors.php   find the line :
+
+
+    'supports_credentials' => false,
+	
+	
+	
+	
+	
+Change to :
+
+
+
+
+
+    'supports_credentials' => true,
+	
+	
+	
+	
+	
+The entire code of this file now looks like this :
+
+
+	<?php
+
+	return [
+
+		/*
+		|--------------------------------------------------------------------------
+		| Cross-Origin Resource Sharing (CORS) Configuration
+		|--------------------------------------------------------------------------
+		|
+		| Here you may configure your settings for cross-origin resource sharing
+		| or "CORS". This determines what cross-origin operations may execute
+		| in web browsers. You are free to adjust these settings as needed.
+		|
+		| To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+		|
+		*/
+
+		'paths' => ['api/*'],
+
+		'allowed_methods' => ['*'],
+
+		'allowed_origins' => ['*'],
+
+		'allowed_origins_patterns' => [],
+
+		'allowed_headers' => ['*'],
+
+		'exposed_headers' => [],
+
+		'max_age' => 0,
+
+		'supports_credentials' => true,
+
+	];
+
+
+
+
+
+//	You must also add more defaults to the Axios settings in the directory   resources/js/bootstrap.js   
+//
+
+
+In directory   resources/js/bootstrap.js   find the lines :
+
+
+	window.axios = require('axios');
+
+	window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+		
+	
+	
+	
+	
+Under them add this line to set more defaults :
+
+
+		window.axios.defaults.withCredentials = true;
+
+
+
+
+
+This part of the code now looks like this :
+
+
+	window.axios = require('axios');
+
+	window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+	window.axios.defaults.withCredentials = true;
+	
+	
+	
+
+
+//	Remember to save
+//
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+//	In web.php you must register the auth routes by make sure the
+//	code below both the use statement and    Auth::routes(); are present
+//
+
+	
+	use Illuminate\Support\Facades\Route;
+	
+	
+	Auth::routes();
+	
+	
+	
+	
+
+Example in this application the web.php directory looks like this :
+
+
+	<?php
+
+	use Illuminate\Support\Facades\Route;
+
+	/*
+	|------------------------------------------------------------------------------------------------------
+	| Web Routes
+	|------------------------------------------------------------------------------------------------------
+	|
+	| Here is where you can register web routes for your application. These
+	| routes are loaded by the RouteServiceProvider within a group which
+	| contains the "web" middleware group. Now create something great!
+	|
+	*/
+
+
+
+	Route::get('/{any?}', function () {
+		return view('index');
+	})->where('any', '^(?!api\/)[\/\w\.-]*');
+
+
+	Auth::routes();
+
+	//Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+
+
+
+
+
+
+
+//	Remember to save
+//
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+
+//	Use this command to confirm Laravel Sanctum routes
+//
+$ php artisan route:list
+
+
+
+
+
+//	In api.php we must move the automatically created route provided by Laravel to web.php
+//
+
+
+In   api.php   find this code :
+
+
+	Route::middleware('auth:api')->get('/user', function (Request $request) {
+		return $request->user();
+	});
+	
+	
+	
+	
+	
+Change the code above to :
+
+
+
+
+
+	Route::middleware('auth')->get('/user', function (Request $request) {
+		return $request->user();
+	});
+
+
+
+	
+
+Move the code above to   web.php
+
+
+
+
+
+The code in web.php in this example looks like this :
+
+
+	<?php
+
+	use Illuminate\Http\Request;
+	use Illuminate\Support\Facades\Route;
+
+	/*
+	|------------------------------------------------------------------------------------------------------
+	| Web Routes
+	|------------------------------------------------------------------------------------------------------
+	|
+	| Here is where you can register web routes for your application. These
+	| routes are loaded by the RouteServiceProvider within a group which
+	| contains the "web" middleware group. Now create something great!
+	|
+	*/
+
+
+	Auth::routes();
+
+
+	Route::middleware('auth')->get('/user', function (Request $request) {
+		return $request->user();
+	});
+
+
+	Route::get('/{any?}', function () {
+		return view('index');
+	})->where('any', '^(?!api\/)[\/\w\.-]*');
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+

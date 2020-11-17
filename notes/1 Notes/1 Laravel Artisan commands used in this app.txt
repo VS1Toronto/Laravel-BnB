@@ -1,0 +1,3286 @@
+Laravel Artisan commands used in this app :
+
+Commands used in this project :
+
+
+
+
+
+//	To create an application using composer which is the php package manager
+//
+//	Open a Gitbash terminal either itself or in Windows Studio Code using     View - Integrated Terminal     or alternatively     ctrl @
+//
+//	cd ../     to the localhost htdocs folder
+//
+//	cd C:
+//	cd xampp
+//	cd htdocs
+//
+$ composer create-project --prefer-dist laravel/laravel core_bnb
+
+
+
+
+
+//	Alternative original way to create application not used in this build
+//
+$ composer create-project laravel/laravel core_bnb
+
+
+
+
+
+//	cd to application directory
+//
+$ cd core_bnb
+
+
+
+
+
+================================================================================================================================================================================================
+ADDING BOOTSTRAP WITH CDN THROUGH THE HEAD SECTION OF THE FILE   layout.blade.php
+================================================================================================================================================================================================
+
+
+----------
+In web.php
+----------
+
+
+	<?php
+
+	use Illuminate\Support\Facades\Route;
+
+	/*
+	|------------------------------------------------------------------------------------------------------
+	| Web Routes
+	|------------------------------------------------------------------------------------------------------
+	|
+	| Here is where you can register web routes for your application. These
+	| routes are loaded by the RouteServiceProvider within a group which
+	| contains the "web" middleware group. Now create something great!
+	|
+	*/
+
+
+	//-----------------------------------------------------------------------------------------------------
+	//  Below replaced with faster routing
+	//
+	//  Route::get('/', function () {
+	//      return view('welcome');
+	//  });
+	//
+	//
+	//  Route::get('contact', function () {
+	//      return view('contact');
+	//  });
+	//
+	//
+	//  Route::get('about', function () {
+	//      return view('about');
+	//  });
+	//-----------------------------------------------------------------------------------------------------
+
+
+
+	//-----------------------------------------------------------------------------------------------------
+	//  ROUTES
+	//
+	//  First parameter corresponds to url 
+	//  Second Parameter corresponds to view
+	//
+	//  This is single line notation for routes which is good for cleanliness of code
+	//
+	Route::view('/', 'home');
+	Route::view('contact', 'contact');
+	Route::view('about', 'about');
+	//-----------------------------------------------------------------------------------------------------
+
+
+
+
+
+--------------------------------------------------------------------------------
+Create file   layout.blade.php   in directory   resources/views/layout.blade.php
+--------------------------------------------------------------------------------
+
+
+	<!doctype html>
+	<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+	<head>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>@yield('title', 'Core Setup')</title>
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	</head>
+	<body>
+
+		<div class="container">
+
+			@include('nav')
+
+			@if(session()->has('message')) 
+				<div class="alert alert-success" role="alert">
+					<strong>Success</strong> {{ session()->get('message') }}
+				</div>
+			@endif
+
+
+			@yield('content')
+
+		</div>
+
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+	</body>
+	</html>
+
+
+
+
+
+----------------------------------------------------------------------------
+Create file   home.blade.php   in directory   resources/views/home.blade.php
+----------------------------------------------------------------------------
+
+
+	@extends('layout')
+
+	@section('content')
+
+		<h1>Welcome to Laravel BnB</h1>
+		
+	@endsection
+
+
+
+
+
+--------------------------------------------------------------------------------
+Create file   about.blade.php   in directory   resources/views/about.blade.php
+--------------------------------------------------------------------------------
+
+
+	@extends('layout')
+
+	@section('content')
+
+		<h1>About Us</h1>
+
+		<p>Core Video</p>
+		<p>123-123-1235</p>
+		
+	@endsection
+	
+	
+	
+	
+	
+----------------------------------------------------------------------------------
+Create file   contact.blade.php   in directory   resources/views/contact.blade.php
+----------------------------------------------------------------------------------
+
+
+	@extends('layout')
+
+	@section('content')
+
+		<h1>Contact Us</h1>
+
+		<p>Core Video</p>
+		<p>123-123-1235</p>
+		
+	@endsection
+
+
+
+
+
+--------------------------------------------------------------------------
+Create file   nav.blade.php   in directory   resources/views/nav.blade.php
+--------------------------------------------------------------------------
+
+
+<ul class="nav py-3">
+    <li class="nav-item">
+        <a class="nav-link active" href="/">Home</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="about">About Us</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="contact">Contact Us</a>
+    </li>
+</ul>
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+At this point Bootstrap is now up and running and included through the   layout.blade.php   file to the views and basic nav bar but this setup will be upgraded to a different setup later
+when the application has   auth   added which in turn automatically adds a directory and blade file in lacation   resources/layouta/app.blade.php   which is where the final layout code each
+view will extend will be located and the nav bar will also be upgraded and will have to be altered to suit the applications needs at that point
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+================================================================================================================================================================================================
+ADDING AUTH AND REFACTORING   nav.php   and all the vewsto use the new   resources/layouts/app.blade.php   INSTEAD OF THE PREVIOUSLY CREATED   layout.blade.php
+================================================================================================================================================================================================
+
+
+
+*** WARNING ***		Code the correct databse in the   .env   file before starting the Auth process
+
+
+
+//	To check Laravel version
+//
+$ php artisan --version
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+//	This test requires the   php artisan make:auth   command to be ran in order to work
+//
+//	*** WARNING ***		php artisan make:auth   has been changed from Laravel 6.0 onwards
+//
+$ php artisan make:auth
+
+
+
+//	NEW WAY TO RUN AUTH COMMAND AS OF LARAVEL 6.0
+//
+
+
+------
+STEP 1
+------
+
+//	Run composer this command
+//
+$ composer require laravel/ui
+
+
+------
+STEP 2
+------
+
+//	Run this command
+//
+$ php artisan ui vue --auth
+
+
+------
+STEP 3
+------
+
+//	During   STEP 2   you will be asked if you want to replace the   home.blade.php   to do so type   yes   and press Enter  
+//
+
+	The [home.blade.php] view already exists. Do you want to replace it? (yes/no) [no]:
+	> yes
+
+
+------
+STEP 4
+------
+
+//	Run this command
+//
+$ npm install
+
+
+------
+STEP 5
+------
+
+//	Run this command
+//
+$ npm run dev
+
+
+------
+STEP 6
+------
+
+
+//	Run migration files to allow register and login functionality to hookup with the database
+//
+php artisan migrate
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+//	This is a way of creating a Laravel application with auth() scaffolding from the start
+//
+laravel new blog --auth
+
+
+
+
+
+================================================================================================================================================================================================
+REFACTOR   resources/layouts/app.blade.php   and   resources/vies/nav.php   and views   resources/views/about.blade.php   resources/views/contact.blade.php   resources/views/about.home.php
+================================================================================================================================================================================================
+
+
+----------
+In web.php
+----------
+
+
+	<?php
+
+	use Illuminate\Support\Facades\Route;
+
+	/*
+	|------------------------------------------------------------------------------------------------------
+	| Web Routes
+	|------------------------------------------------------------------------------------------------------
+	|
+	| Here is where you can register web routes for your application. These
+	| routes are loaded by the RouteServiceProvider within a group which
+	| contains the "web" middleware group. Now create something great!
+	|
+	*/
+
+
+	//-----------------------------------------------------------------------------------------------------
+	//  Below replaced with faster routing
+	//
+	//  Route::get('/', function () {
+	//      return view('welcome');
+	//  });
+	//
+	//
+	//  Route::get('contact', function () {
+	//      return view('contact');
+	//  });
+	//
+	//
+	//  Route::get('about', function () {
+	//      return view('about');
+	//  });
+	//-----------------------------------------------------------------------------------------------------
+
+
+
+	//-----------------------------------------------------------------------------------------------------
+	//  ROUTES
+	//
+	//  First parameter corresponds to url 
+	//  Second Parameter corresponds to view
+	//
+	//  This is single line notation for routes which is good for cleanliness of code
+	//
+	route::view('/', 'home')->name('home');
+	Route::view('contact', 'contact')->name('contact');
+	Route::view('about', 'about')->name('about');
+	//-----------------------------------------------------------------------------------------------------
+
+	Auth::routes();
+
+	Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+
+
+-----------------------------------
+In  resources/layouts/app.blade.php
+-----------------------------------
+
+
+	<!doctype html>
+	<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- CSRF Token -->
+		<meta name="csrf-token" content="{{ csrf_token() }}">
+
+		<title>Laravel BnB @yield('title')</title>
+
+		<!-- Scripts -->
+
+		<!-- Fonts -->
+		<link rel="dns-prefetch" href="//fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
+		<!-- Styles -->
+		<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+		
+		<!-- Body Background and Footer CSS -->
+		<!-- -->
+		<style>
+			body{
+				background-color: #ffffff;
+			}
+
+			* {
+				margin: 0;
+			}
+			html, body {
+				height: 100%;
+			}
+			.wrapper {
+				min-height: 100%;
+				height: auto !important;
+				height: 100%;
+				margin: 0 auto -50px; /* the bottom margin is the negative value of the footer's height */
+			}
+
+			.footer, .push {
+				height: 50px; /* .push must be the same height as .footer */
+			}
+
+			.footer {
+				position:absolute;
+				width:100%;
+				bottom:0;
+				margin-top:30px;
+				padding:10px;
+				color:#fff;
+				background:#B2B2B2;
+			}
+
+		</style>
+		
+		@yield('styles')
+	</head>
+	<body>
+		<div id="app">
+
+			@include('nav')
+
+			<main class="py-4">
+				@yield('content')
+			</main>
+		</div>
+
+		<script src="{{ asset('js/app.js') }}" defer></script>
+		@yield('scripts')
+	</body>
+	</html>
+	
+	
+	
+	
+	
+--------------------------------------------------------------------------
+Create file   nav.blade.php   in directory   resources/views/nav.blade.php
+--------------------------------------------------------------------------
+
+
+	<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+		<div class="container">
+			<a class="navbar-brand" href="{{ url('/') }}">
+				{{ 'Laravel BnB' }}
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<!-- Left Side Of Navbar -->
+				<ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ route('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ route('about') }}">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ route('contact') }}">Contact Us</a>
+                    </li>
+                </ul>
+
+				<!-- Right Side Of Navbar -->
+				<ul class="navbar-nav ml-auto">
+					<!-- Authentication Links -->
+					@guest
+						<li class="nav-item">
+							<a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+						</li>
+						@if (Route::has('register'))
+							<li class="nav-item">
+								<a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+							</li>
+						@endif
+					@else
+						<li class="nav-item dropdown">
+							<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+								{{ Auth::user()->name }} <span class="caret"></span>
+							</a>
+
+							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+								<a class="dropdown-item" href="{{ route('logout') }}"
+									onclick="event.preventDefault();
+													document.getElementById('logout-form').submit();">
+									{{ __('Logout') }}
+								</a>
+
+								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+									@csrf
+								</form>
+							</div>
+						</li>
+					@endguest
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	
+
+
+
+----------------------------------------------------------------------------
+Create file   home.blade.php   in directory   resources/views/home.blade.php
+----------------------------------------------------------------------------
+
+
+	@extends('layouts.app')
+
+	@section('title', 'Home')
+
+	@section('content')
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-8">
+				<div class="card">
+					<div class="card-header">{{ __('Dashboard') }}</div>
+
+					<div class="card-body">
+						@if (session('status'))
+							<div class="alert alert-success" role="alert">
+								{{ session('status') }}
+							</div>
+						@endif
+
+						{{ __('You are logged in!') }}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	@endsection
+
+
+
+
+
+--------------------------------------------------------------------------------
+Create file   about.blade.php   in directory   resources/views/about.blade.php
+--------------------------------------------------------------------------------
+
+
+	@extends('layouts.app')
+
+	@section('title', 'About')
+
+	@section('content')
+
+		<div class="container">
+			<h1>About Us</h1>
+
+			<p>Company Name</p>
+			<p>123-123-1235</p>
+		</div>
+		
+	@endsection
+	
+	
+	
+	
+	
+----------------------------------------------------------------------------------
+Create file   contact.blade.php   in directory   resources/views/contact.blade.php
+----------------------------------------------------------------------------------
+
+
+	@extends('layouts.app')
+
+	@section('title', 'Contact')
+
+	@section('content')
+
+		<div class="container">
+			<h1>Contact Us</h1>
+
+			<p>Company Name</p>
+			<p>123-123-1235</p>
+		</div>
+		
+	@endsection
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+*** WARNING ***   The code below is for any case where it is necessary to install Vue in Laravel 6 if it is not already in the application
+
+
+================================================================================================================================================================================================
+ADDING VUE
+================================================================================================================================================================================================
+
+
+//	To check Laravel version
+//
+$ php artisan --version
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+//	This test requires the   php artisan make:auth   command to be ran in order to work
+//
+//	*** WARNING ***		php artisan preset none   and   php artisan preset vue   has been changed from Laravel 6.0 onwards
+//
+
+
+
+
+//	NEW WAY TO RUN PRESET VUE COMMAND AS OF LARAVEL 6.0
+//
+
+
+------
+STEP 1
+------
+
+//	Use the command   composer require laravel/ui   to bring in the new ui support for Laravel 6
+//
+$ composer require laravel/ui
+
+
+------
+STEP 2
+------
+
+//	Use the command   php artisan ui vue   to bring in Vue support for Laravel 6
+//
+$ php artisan ui vue
+
+
+------
+STEP 3
+------
+
+//	Run this command
+//
+$ npm install
+
+
+------
+STEP 4
+------
+
+//	Run this command
+//
+$ npm run dev
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------------------------------
+In Laravel 6 All str_ and array_ helpers have been moved to 
+the new laravel/helpers Composer package and removed from the 
+framework. 
+
+If desired, you may update all calls to these helpers 
+to use the 
+
+	use Illuminate\Support\Str 
+
+and 
+
+	use Illuminate\Support\Arr classes. 
+	
+
+//	Alternatively, you can add the new laravel/helpers package to your application 
+//	to continue using these helpers:
+//
+$ composer require laravel/helpers
+
+
+If don't want to add Package then Used Str And Arr Classes.
+
+For Example :
+
+Str::random(12)
+---------------------------------------------------------------------------------------------
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+================================================================================================================================================================================================
+ADDING VUE ROUTER
+================================================================================================================================================================================================
+
+
+To allow special access in every component of our vue.js application to the necessary routes using a special object the router and route prepended with a $ follow these steps
+
+
+
+
+------
+STEP 1
+------
+
+//	Install view router using this command
+//
+$ npm install vue-router
+
+
+
+
+
+------
+STEP 2
+------
+
+
+//	Create new file   routes.js   in directory   resources/js/routes.js   by right click and crete new file
+//
+
+
+
+
+
+------
+STEP 3
+------
+
+
+Place this initial code within the new routes .js file which in this example is using the default ExampleComponent to demonstrate :
+
+
+
+
+
+	import VueRouter from "vue-router";
+	import ExampleComponent from "./components/ExampleComponent";
+
+
+	const routes = [
+		{
+			path: "/",
+			component: ExampleComponent,
+		},
+	];
+
+
+	const router = new VueRouter({
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		routes, 
+		//---------------------------------------------------------------------------------------------------    
+	});
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This makes this available in     resources/js/app.js
+	//
+	export default router;
+	//-------------------------------------------------------------------------------------------------------
+	
+	
+	
+	
+	
+------
+STEP 4
+------
+
+
+After removing the comments from directory   resources/js/ap.js   place this code :
+
+
+
+
+
+	require('./bootstrap');
+
+	//-------------------------------------------------------------------------------------------------------
+	//  Needed to allow access for the vue components to access routes
+	//
+	import router from "./routes";
+	import VueRouter from "vue-router";
+	//-------------------------------------------------------------------------------------------------------
+
+
+	window.Vue = require('vue');
+	Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This allows special access in every component of our vue.js
+	//  application to special object the router and route prepended with a $
+	//
+	Vue.use(VueRouter);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	const app = new Vue({
+		el: '#app',
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		router, 
+		//---------------------------------------------------------------------------------------------------
+	});
+
+
+
+
+
+------
+STEP 5
+------
+
+
+The element tag     <router-view></router-view>     tells vue.js where to render the components in the
+application so to accomadate this at this stage I have reconfigured the   home.blade.view   as shown below :
+
+
+
+
+
+	@extends('layouts.app')
+
+	@section('title', 'Home')
+
+	@section('content')
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-12">
+
+				<div>
+					@if (session('status'))
+						<div class="alert alert-success" role="alert">
+							{{ session('status') }}
+						</div>
+					@endif
+
+					<router-view></router-view>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	@endsection
+
+
+
+
+
+------
+STEP 6
+------
+
+
+//	Run this command
+//
+$ npm run dev
+
+
+
+
+
+You should now see a # symbol whihc the view router is adding to any route url in the bar indicating it is working
+
+
+Example :
+
+
+	http://127.0.0.1:8000/home#/
+	
+	
+	
+
+In the Vue tools added to the chrome browser this data including a path is now available to all components in the 
+application thanks to using the   Vue.use(VueRouter);   in   resources/js/app.js   inline with the above code additions
+	
+	
+	data
+		$route
+		path:"/"
+		query:Object (empty)
+		params:Object (empty)
+		fullPath:"/"
+		name:"home"
+		meta:Object (empty)
+
+
+
+
+================================================================================================================================================================================================
+REMOVE   #   SYMBOL FROM URL BAR WHICH MODERN BROWSERS NO LONGER NEED
+================================================================================================================================================================================================
+
+
+-------------------------
+In resources/js/routes.js
+-------------------------
+
+In the   router   object change the code from :
+
+
+
+	const router = new VueRouter({
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		routes, 
+		//---------------------------------------------------------------------------------------------------    
+
+	});
+	
+	
+	
+to :
+
+
+
+	const router = new VueRouter({
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		routes, 
+		//---------------------------------------------------------------------------------------------------    
+
+		//---------------------------------------------------------------------------------------------------
+		//  This gets rid of the   #   symbol in the url bar which modern browsers no longer need
+		//
+		mode: "history",
+		//---------------------------------------------------------------------------------------------------    
+
+	});
+
+
+
+
+
+//	Run this command to complete removal of   #   symbol
+//
+$ npm run dev
+
+
+
+
+================================================================================================================================================================================================
+EXAMPLE OF ADDING EXAMPLECOMPONENT2
+================================================================================================================================================================================================
+
+
+Add a new component named   ExampleComponent2.vue   to   resources/js/components
+
+
+------------------------
+In ExampleComponent2.vue
+------------------------
+
+
+	<template>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-8">
+					<div class="card">
+						<div class="card-header">Example Component 2</div>
+
+						<div class="card-body">
+							I'm a second example component.
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</template>
+
+	<script>
+		export default {
+			mounted() {
+				console.log('Component mounted.')
+			}
+		}
+	</script>
+
+
+
+
+
+----------------------
+In resources/js/app.js
+----------------------
+
+
+	require('./bootstrap');
+
+	//-------------------------------------------------------------------------------------------------------
+	//  Needed to allow access for the vue components to access routes
+	//
+	import router from "./routes";
+	import VueRouter from "vue-router";
+	//-------------------------------------------------------------------------------------------------------
+
+
+	window.Vue = require('vue');
+	Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+	Vue.component('example-component-2', require('./components/ExampleComponent2.vue').default);
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This allows special access in every component of our vue.js
+	//  application to special object the router and route prepended with a $
+	//
+	Vue.use(VueRouter);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	const app = new Vue({
+		el: '#app',
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		router, 
+		//---------------------------------------------------------------------------------------------------
+	});
+
+
+
+
+
+-------------------------
+In resources/js/routes.js
+-------------------------
+
+
+	import VueRouter from "vue-router";
+	import ExampleComponent from "./components/ExampleComponent";
+	import ExampleComponent2 from "./components/ExampleComponent2";
+
+
+	const routes = [
+		{
+			path: "/",
+			component: ExampleComponent,
+			name: "index",
+		},
+			{
+			path: "/home",
+			component: ExampleComponent2,
+			name: "home",
+		},
+	];
+
+
+	const router = new VueRouter({
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		routes, 
+		//---------------------------------------------------------------------------------------------------    
+
+		//---------------------------------------------------------------------------------------------------
+		//  This gets rid of the   #   symbol in the url bar which modern browsers no longer need
+		//
+		mode: "history",
+		//---------------------------------------------------------------------------------------------------    
+
+	});
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This makes this available in     resources/js/app.js
+	//
+	export default router;
+	//-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+----------
+In web.php
+----------
+
+
+	<?php
+
+	use Illuminate\Support\Facades\Route;
+
+	/*
+	|------------------------------------------------------------------------------------------------------
+	| Web Routes
+	|------------------------------------------------------------------------------------------------------
+	|
+	| Here is where you can register web routes for your application. These
+	| routes are loaded by the RouteServiceProvider within a group which
+	| contains the "web" middleware group. Now create something great!
+	|
+	*/
+
+
+	//-----------------------------------------------------------------------------------------------------
+	//  Below replaced with faster routing
+	//
+	//  Route::get('/', function () {
+	//      return view('welcome');
+	//  });
+	//
+	//
+	//  Route::get('contact', function () {
+	//      return view('contact');
+	//  });
+	//
+	//
+	//  Route::get('about', function () {
+	//      return view('about');
+	//  });
+	//-----------------------------------------------------------------------------------------------------
+
+
+
+	//-----------------------------------------------------------------------------------------------------
+	//  ROUTES
+	//
+	//  First parameter corresponds to url 
+	//  Second Parameter corresponds to view
+	//
+	//  This is single line notation for routes which is good for cleanliness of code
+	//
+
+
+	//  FALLBACK ROUTE
+	//
+	//  This route if active contais a regular expression which contains shortened code symbols
+	//  to represent Regex strings and will match any word typed in as a route and return the route
+	//  to view home as long as you dont type in the word api
+	//
+	//  Route::get('/{any?}', function () {
+	//      return view('home');
+	//  })->where('any', '^(?!api\/)[\/\w\.-]*');
+
+
+	Route::view('/', 'home')->name('home');
+	Route::view('contact', 'contact')->name('contact');
+	Route::view('about', 'about')->name('about');
+	//-----------------------------------------------------------------------------------------------------
+
+
+	Auth::routes();
+
+	Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+
+
+//	Run this command and now the route   /   will display the   ExampleComponent.vue   and the route   home   will display the   ExampleCOmponent2.vue   this works because vue is now routing
+//
+$ npm run dev
+
+
+
+
+
+================================================================================================================================================================================================
+================================================================================================================================================================================================
+CREATE MAIN COMPONENT LOCALLY THAT WILL EFFECTIVELY BE THE COMPONENT WHERE ALL THE ROUTES TO ALL COMPONENTS ARE STORES AND CALL THIS COMPONENT INDEX.VUE
+================================================================================================================================================================================================
+================================================================================================================================================================================================
+
+
+Create new Vue component named   Index.vue   inside directory   resources/js
+
+
+Move the element   <router-view></router-view>   from the   home.blade.php   to the newly created   Index.vue   inside elements shown below :
+
+
+After this Index.vue must be registered localy in directory   resources/js/app.js
+
+
+The element   <index></index>   must then be added to the main layout blade at directory   resources/views/layouts/app.blade.php
+
+
+Then run   $ npm run dev   to apply the changes to Vue
+
+
+
+
+
+-------------------------
+In resources/js/Index.vue
+-------------------------
+
+
+	<template>
+		<div>
+			<router-view></router-view>
+		</div>
+	</template>
+
+
+
+
+
+----------------------
+In resources/js/spp.js
+----------------------
+
+
+	require('./bootstrap');
+
+	//-------------------------------------------------------------------------------------------------------
+	//  Needed to allow access for the vue components to access routes
+	//
+	import router from "./routes";
+	import VueRouter from "vue-router";
+	//-------------------------------------------------------------------------------------------------------
+
+	//-------------------------------------------------------------------------------------------------------
+	//  Registering index.vue locally
+	//
+	import Index from "./Index";
+	//-------------------------------------------------------------------------------------------------------
+
+
+	window.Vue = require('vue');
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  Global registration of these components no longer required
+	//  because they are now imported in the routes.js however left for reference
+	//
+	//  Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+	//  Vue.component('example-component-2', require('./components/ExampleComponent2.vue').default);
+	//-------------------------------------------------------------------------------------------------------
+
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This allows special access in every component of our vue.js
+	//  application to special object the router and route prepended with a $
+	//
+	Vue.use(VueRouter);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	const app = new Vue({+
+		el: '#app',
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		router, 
+		//---------------------------------------------------------------------------------------------------
+
+
+		//---------------------------------------------------------------------------------------------------
+		//  Here we tell VUe it should know about the component Index.vue
+		//
+		components: {
+			"index": Index
+		}
+		//---------------------------------------------------------------------------------------------------
+
+	});
+
+
+
+----------------------------------------
+In resources/views/layouts/app.blade.php
+----------------------------------------
+
+
+	<!doctype html>
+	<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<!-- CSRF Token -->
+		<meta name="csrf-token" content="{{ csrf_token() }}">
+
+		<title>Laravel BnB @yield('title')</title>
+
+		<!-- Scripts -->
+
+		<!-- Fonts -->
+		<link rel="dns-prefetch" href="//fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+
+		<!-- Styles -->
+		<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+		
+		<!-- Body Background and Footer CSS -->
+		<!-- -->
+		<style>
+			body{
+				background-color: #ffffff;
+			}
+
+			* {
+				margin: 0;
+			}
+			html, body {
+				height: 100%;
+			}
+			.wrapper {
+				min-height: 100%;
+				height: auto !important;
+				height: 100%;
+				margin: 0 auto -50px; /* the bottom margin is the negative value of the footer's height */
+			}
+
+			.footer, .push {
+				height: 50px; /* .push must be the same height as .footer */
+			}
+
+			.footer {
+				position:absolute;
+				width:100%;
+				bottom:0;
+				margin-top:30px;
+				padding:10px;
+				color:#fff;
+				background:#B2B2B2;
+			}
+
+		</style>
+		
+		@yield('styles')
+	</head>
+	<body>
+
+		<div id="app">
+
+			@include('nav')
+
+			<main class="py-4">		
+				<index></index>
+				
+				@yield('content')
+			</main>
+		</div>
+
+		<script src="{{ asset('js/app.js') }}" defer></script>
+		
+		@yield('scripts')
+		
+	</body>
+	</html>
+
+
+
+
+
+-------------------------
+In resources/js/routes.js
+-------------------------
+
+
+	import VueRouter from "vue-router";
+	import ExampleComponent from "./components/ExampleComponent";
+	import ExampleComponent2 from "./components/ExampleComponent2";
+
+
+	const routes = [
+		{
+			path: "/",
+			component: ExampleComponent,
+			name: "index",
+		},
+			{
+			path: "/home",
+			component: ExampleComponent2,
+			name: "home",
+		},
+	];
+
+
+	const router = new VueRouter({
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		routes, 
+		//---------------------------------------------------------------------------------------------------    
+
+		//---------------------------------------------------------------------------------------------------
+		//  This gets rid of the   #   symbol in the url bar which modern browsers no longer need
+		//
+		mode: "history",
+		//---------------------------------------------------------------------------------------------------    
+
+	});
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This makes this available in     resources/js/app.js
+	//
+	export default router;
+	//-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//	Run this command to tell Vue of the changes
+//
+$ npm run dev
+
+
+
+
+
+================================================================================================================================================================================================
+USING   <router-link to=""></router-link>   ELEMENT
+================================================================================================================================================================================================
+
+
+To add clickable links which link through elements to routes in   resources/js/routes.js
+
+
+
+
+
+-------------------------
+In resources/js/Index.vue
+-------------------------
+
+
+<template>
+    <div>
+        <router-link to="/">Index</router-link>
+        <router-link to="/home">Home</router-link>
+        <router-view></router-view>
+    </div>
+</template>
+
+
+
+
+
+//	Run this command to tell Vue of the changes
+//
+$ npm run dev
+
+
+
+
+
+================================================================================================================================================================================================
+USING   <router-link v-bind:to=""></router-link>   ELEMENT TO BIND TO THE NAME PROPERTY OF THE LINK HELD IN THE ROUTES.JS
+================================================================================================================================================================================================
+
+
+
+
+
+-------------------------
+In resources/js/Index.vue
+-------------------------
+
+
+	<template>
+		<div>
+			<router-link v-bind:to="{name: 'index'}">Index</router-link>
+			<router-link v-bind:to="{name: 'home'}">Home</router-link>
+			<router-view></router-view>
+		</div>
+	</template>
+
+
+
+
+
+-------------------------
+In resources/js/routes.js
+-------------------------
+
+
+	import VueRouter from "vue-router";
+	import ExampleComponent from "./components/ExampleComponent";
+	import ExampleComponent2 from "./components/ExampleComponent2";
+
+
+	const routes = [
+		{
+			path: "/",
+			component: ExampleComponent,
+			name: "index",
+		},
+			{
+			path: "/home",
+			component: ExampleComponent2,
+			name: "home",
+		},
+	];
+
+
+	const router = new VueRouter({
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		routes, 
+		//---------------------------------------------------------------------------------------------------    
+
+		//---------------------------------------------------------------------------------------------------
+		//  This gets rid of the   #   symbol in the url bar which modern browsers no longer need
+		//
+		mode: "history",
+		//---------------------------------------------------------------------------------------------------    
+
+	});
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This makes this available in     resources/js/app.js
+	//
+	export default router;
+	//-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//	Run this command to tell Vue of the changes
+//
+$ npm run dev
+
+
+
+
+
+//	This is a short hand notation but im not going to use it as I think v-bind is more clear
+//
+
+
+-------------------------
+In resources/js/Index.vue
+-------------------------
+
+
+	<template>
+		<div>
+			<router-link :to="{name: 'index'}">Index</router-link>
+			<router-link :to="{name: 'home'}">Home</router-link>
+			<router-view></router-view>
+		</div>
+	</template>
+
+
+
+
+
+================================================================================================================================================================================================
+CURRENT STATE OF NAVBAR AT THIS POINT WHICH IS IN INDEX.VUE GETTING ROUTES FROM ROUTE.JS AND BEING DISPLAYED THROUGH   <index></index>   TAGS IN APP.JS
+================================================================================================================================================================================================
+
+
+
+
+
+	<template>
+		<div>
+			<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+				<div class="container">
+					<router-link class="navbar-brand" v-bind:to="{name: 'index'}">Laravel BnB</router-link>
+
+
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<!-- Left Side Of Navbar -->
+						<ul class="navbar-nav mr-auto">
+							<li class="nav-item" v-if="!isLoggedIn">
+								<router-link class="nav-link active"  v-bind:to="{name: 'home'}">Home</router-link>
+							</li>
+						</ul>
+
+						<!-- Right Side Of Navbar -->
+						<ul class="navbar-nav ml-auto">
+							<!-- Authentication Links -->
+							<router-link v-bind:to="{name: 'index'}">Index</router-link>
+							<router-link v-bind:to="{name: 'home'}">Home</router-link>
+						</ul>
+					</div>
+
+				</div>
+			</nav>
+
+
+
+			<router-link v-bind:to="{name: 'index'}">Index</router-link>
+			<router-link v-bind:to="{name: 'home'}">Home</router-link>
+			<router-view></router-view>
+		</div>
+	</template>
+
+
+
+
+
+
+
+//	Create model   Bookable   and its migration
+//
+$ php artisan make:model Bookable -m
+
+
+
+
+
+//	Run Migrations
+//
+$ php artisan migrate
+
+
+
+
+
+//	If you need to run all migrations again use this command
+//
+$ php artisan migrate:fresh
+
+
+
+
+
+//	Create Factory   BookableFactory
+//
+$ php artisan make:factory BookableFactory --model=Bookable
+
+
+
+
+
+//	Create Seeder  BookablesTableSeeder
+//
+$ php artisan make:seeder BookablesTableSeeder
+
+
+
+
+
+//	Migrate all tables again and seed the database
+//
+$ php artisan migrate:fresh --seed
+
+
+
+
+
+//	Create controller   BookableController   in the new directory   app/Http/Controllers/Api
+//
+$ php artisan make:controller Api/BookableController
+
+
+
+
+
+//	Create resource   BookableIndexResource   in directory   app/Http/Resources   using this command  
+//
+$ php artisan make:resource BookableIndexResource
+
+
+
+
+
+//	Create resource   BookableShowResource   in directory   app/Http/Resources   using this command     
+//
+$ php artisan make:resource BookableShowResource
+
+
+
+
+
+================================================================================================================================================================================================
+INSTALL LARAVEL DEBUG BAR
+================================================================================================================================================================================================
+
+
+------
+STEP 1
+------
+
+
+//	Install Laravel Debugbar using this command
+//
+$ composer require barryvdh/laravel-debugbar --dev
+
+
+------
+STEP 2
+------
+
+
+Next to make the package work open the   .env   file and change :
+
+
+
+
+	APP_DEBUG=false
+
+
+
+To :
+
+
+
+	APP_DEBUG=true
+
+
+
+
+
+------
+STEP 3
+------
+
+
+//	Next restart the Laravel Development Server if using it with this command
+//
+$ php artisan serve
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//	Create model   Booking   and its migration using this command
+//
+$ php artisan make:model Booking -m
+
+
+
+
+
+//	Use this command to run migrations
+//
+$ php artisan migrate
+
+
+
+
+
+//	Create a factory named   BookingFactory   using this command
+//
+$ php artisan make:factory BookingFactory
+
+
+
+
+
+//	Create seeder   BookingsTableSeeder   using this command
+//
+$ php artisan make:seeder BookingsTableSeeder
+
+
+
+
+
+//	Use this command to migrate all tables again
+//
+$ php artisan migrate:fresh
+
+
+
+
+
+//	Use this command to seed all factory created data for the tables
+//
+$ php artisan db:seed
+
+
+
+
+
+//	This command creates a   single action controller   these types of controllers only have a single action and that method
+//	name will always be   public function __invoke($id)   and this allows this controller class to be called like a function
+//
+$ php artisan make:controller Api/BookableAvailabilityController --invokable
+
+
+
+
+
+//	Create model   Review   and its migration using this command
+//
+$ php artisan make:model Review -m
+
+
+
+
+
+//	Use this command to migrate the new table
+//
+$ php artisan migrate
+
+
+
+
+
+//	Create a factory named   ReviewFactory   using this command
+//
+$ php artisan make:factory ReviewFactory
+
+
+
+
+
+//	Create seeder   ReviewsTableSeeder   using this command
+//
+$ php artisan make:seeder ReviewsTableSeeder
+
+
+
+
+
+//	Drop all tables and migrate fresh and seed the newly created tables using this command
+//
+$ php artisan migrate:fresh --seed
+
+
+
+
+
+//	In phpMyAdmin in the reviews table under the SQL tab find the total number of records with this command - In this example its 1780
+//
+SELECT * FROM reviews;
+
+
+
+
+
+//	In phpMyAdmin in the reviews table under the SQL tab find the total number distinct ids in records with this command and if it matches the above total which proves all uuids are unique  - In this example its 1780
+//
+SELECT DISTINCT id FROM reviews;
+
+
+
+
+
+//	This command creates a   single action controller   these types of controllers only have a single action and that method
+//	name will always be   public function __invoke($id)   and this allows this controller class to be called like a function
+/
+$ php artisan make:controller Api/BookableReviewController --invokable
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+
+//	Fire up the Laravel Development Server before testing any routes on Postman or you wont get a response
+//
+$ php artisan serve
+
+
+
+
+
+//	Use this route on Postmen to test for the reviews functionality remembering to have   Key Accept   Value application/json   as Headers
+//
+http://127.0.0.1:8000/api/bookables/1/reviews
+
+
+
+
+
+//	To restrict the data coming back from the   return $bookable->reviews()->latest()->get();   call in the single action controller   BookableReviewController   
+//	create resource with this command which will create it in the directory   app/Http/Resources/BookableReviewIndexResource.php
+//
+$ php artisan make:resource BookableReviewIndexResource
+
+
+
+
+
+================================================================================================================================================================================================
+ADD MOMENT TO APPLICATION
+================================================================================================================================================================================================
+
+
+//	Install Moment to application using this command
+//
+$ npm install moment --save
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+================================================================================================================================================================================================
+ADD FONT AWESOME TO APPLICATION
+================================================================================================================================================================================================
+
+
+//	Install Font Awesome to application using this command
+//
+$ npm install --save @fortawesome/fontawesome-free
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+//	Add these lines to the resources/sass/app.scss
+//
+
+// Font awesome
+//
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+//	Create controller   ReviewController   in directory   app/Http/Controllers/ApiReviewController.php   using this command
+//
+$ php artisan make:controller Api/ReviewController
+
+
+
+
+
+//	Create resource   ReviewResource   in directory   app/Http/Resources/ReviewResource.php
+//
+$ php artisan make:resource ReviewResource
+
+
+
+
+
+//	Create migration   AddReviewKeyToBookingsTable   using this command
+//
+$ php artisan make:migration AddReviewKeyToBookingsTable
+
+
+
+
+
+//	Drop all tables and migrate fresh and seed the newly created tables using this command
+//
+$ php artisan migrate:fresh --seed
+
+
+
+
+
+//	This command creates a   single action controller   these types of controllers only have a single action and that method
+//	name will always be   public function __invoke($id)   and this allows this controller class to be called like a function
+/
+$ php artisan make:controller Api/BookingByReviewController --invokable
+
+
+
+
+
+//	Create resource   BookingByReviewShowResource   in directory   app/Http/Resources/BookingByReviewShowResource.php
+//
+$ php artisan make:resource BookingByReviewShowResource
+
+
+
+
+
+//	Create resource   BookingByReviewBookableShowResource   in directory   app/Http/Resources/BookingByReviewBookableShowResource.php
+//
+$ php artisan make:resource BookingByReviewBookableShowResource
+
+
+
+
+
+================================================================================================================================================================================================
+ADD VUEX
+================================================================================================================================================================================================
+
+
+//	Install   Vuex   using this command
+//
+$ npm install vuex --save
+
+
+
+
+
+//	Add this import statement to   resources/js/app.js
+//
+
+	import Vuex from "vuex";
+
+
+
+
+
+//	Add this import statement to   resources/js/app.js
+//
+
+	Vue.use(Vuex);
+	
+	
+	
+	
+//	So the code in   resources/js/app.js   looks like this
+//	
+	
+	require('./bootstrap');
+
+	import moment from "moment";
+	import VueRouter from "vue-router";
+	import Vuex from "vuex";
+	import router from "./routes";
+	import Index from "./Index";
+	import FatalError from "./shared/components/FatalError";
+	import StarRating from "./shared/components/StarRating";
+	import Success from "./shared/components/Success";
+	import ValidationErrors from "./shared/components/ValidationErrors";
+
+
+	window.Vue = require('vue');
+	
+	Vue.use(VueRouter);
+	Vue.use(Vuex);
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This makes the filter   fromNow()   which is held in   ReviewList.vue   component Global
+	//
+	Vue.filter("fromNow", value => moment(value).fromNow());
+	//-------------------------------------------------------------------------------------------------------
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This Globally registers StarRating component
+	//
+	Vue.component("star-rating", StarRating);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This Globally registers FatalError component
+	//
+	Vue.component("fatal-error", FatalError);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This Globally registers Success component
+	//
+	Vue.component("success", Success);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This Globally registers ValidationErrors component
+	//
+	Vue.component("v-errors", ValidationErrors);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	const app = new Vue({
+		el: '#app',
+
+		//---------------------------------------------------------------------------------------------------
+		//  Shorthand for     routes: routes,
+		//
+		router, 
+		//---------------------------------------------------------------------------------------------------
+
+
+		//---------------------------------------------------------------------------------------------------
+		//  Here we tell VUe it should know about the component Index.vue
+		//
+		components: {
+			"index": Index
+		}
+		//---------------------------------------------------------------------------------------------------
+
+	});
+
+	
+	
+	
+	
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+
+//	Create the Vuex store in directory   resources/js/app.js  
+//
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  Create Vuex store
+	//
+	const store = Vuex.Store(storeDefinition);
+	//-------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+//	Add the ES6 Shorthand		
+//
+
+
+    //---------------------------------------------------------------------------------------------------
+    //  ES6 shorthand for     store: store,
+    //
+    store, 
+    //---------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+//	So the   resources/js/app.js   looks like this
+//	
+	
+	require('./bootstrap');
+
+	import moment from "moment";
+	import VueRouter from "vue-router";
+	import Vuex from "vuex";
+	import router from "./routes";
+	import Index from "./Index";
+	import FatalError from "./shared/components/FatalError";
+	import StarRating from "./shared/components/StarRating";
+	import Success from "./shared/components/Success";
+	import ValidationErrors from "./shared/components/ValidationErrors";
+
+
+	window.Vue = require('vue');
+	
+	Vue.use(VueRouter);
+	Vue.use(Vuex);
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This makes the filter   fromNow()   which is held in   ReviewList.vue   component Global
+	//
+	Vue.filter("fromNow", value => moment(value).fromNow());
+	//-------------------------------------------------------------------------------------------------------
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This Globally registers StarRating component
+	//
+	Vue.component("star-rating", StarRating);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This Globally registers FatalError component
+	//
+	Vue.component("fatal-error", FatalError);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This Globally registers Success component
+	//
+	Vue.component("success", Success);
+	//-------------------------------------------------------------------------------------------------------
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  This Globally registers ValidationErrors component
+	//
+	Vue.component("v-errors", ValidationErrors);
+	//-------------------------------------------------------------------------------------------------------
+
+
+
+	//-------------------------------------------------------------------------------------------------------
+	//  Create Vuex store
+	//
+	const store = new Vuex.Store(storeDefinition);
+	//-------------------------------------------------------------------------------------------------------
+
+
+
+	const app = new Vue({
+		el: '#app',
+
+		//---------------------------------------------------------------------------------------------------
+		//  ES6 horthand for     routes: routes,
+		//
+		router, 
+		//---------------------------------------------------------------------------------------------------
+
+
+		//---------------------------------------------------------------------------------------------------
+		//  ES6 shorthand for     store: store,
+		//
+		store, 
+		//---------------------------------------------------------------------------------------------------
+
+
+		//---------------------------------------------------------------------------------------------------
+		//  Here we tell VUe it should know about the component Index.vue
+		//
+		components: {
+			"index": Index
+		}
+		//---------------------------------------------------------------------------------------------------
+
+	});
+
+
+//	Create directory   resources/js/store.js
+//
+
+	
+	Code store.js with Vuex code
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+================================================================================================================================================================================================
+ADD PRICE FUNCTIONALITY
+================================================================================================================================================================================================
+
+
+//	Create migration   AddPriceToBookablesTable   using this command
+//
+$ php artisan make:migration AddPriceToBookablesTable
+
+
+
+
+
+---------------------------------------------
+In migration add_price_to_bookables_table.php
+---------------------------------------------
+
+
+	<?php
+
+	use Illuminate\Database\Migrations\Migration;
+	use Illuminate\Database\Schema\Blueprint;
+	use Illuminate\Support\Facades\Schema;
+
+	class AddPriceToBookablesTable extends Migration
+	{
+		/**
+		 * Run the migrations.
+		 *
+		 * @return void
+		 */
+		public function up()
+		{
+			Schema::table('bookables', function (Blueprint $table) {
+				$table->unsignedInteger('price');
+			});
+		}
+
+		/**
+		 * Reverse the migrations.
+		 *
+		 * @return void
+		 */
+		public function down()
+		{
+			Schema::table('bookables', function (Blueprint $table) {
+				$table->dropColumn('price');
+			});
+		}
+	}
+
+
+
+
+
+------------------------------
+In factory BookableFactory.php
+------------------------------
+
+
+	<?php
+
+	/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+	use App\Bookable;
+	use Faker\Generator as Faker;
+	use Illuminate\Support\Arr;
+
+	$suffix = [
+		'Villa',
+		'House',
+		'Cottage',
+		'Luxury Villas',
+		'Cheap House',
+		'Rooms',
+		'Cheap Rooms',
+		'Luxury Rooms',
+		'Fancy Rooms'
+	];
+
+	$factory->define(Bookable::class, function (Faker $faker) use ($suffix) {
+		return [
+			'title' => $faker->city . ' ' . Arr::random($suffix),
+			'description' => $faker->text(),
+			'price' => random_int(15, 600)
+		];
+	});
+
+
+
+
+
+//	Drop all tables and migrate fresh and seed the newly created tables using this command
+//
+$ php artisan migrate:fresh --seed
+
+
+
+
+
+//	This command creates a   single action controller   these types of controllers only have a single action and that method
+//	name will always be   public function __invoke($id)   and this allows this controller class to be called like a function
+/
+$ php artisan make:controller Api/BookablePriceController --invokable
+
+
+
+
+
+-----------------------------------------
+In controller BookablePriceController.php
+-----------------------------------------
+
+
+	<?php
+
+	namespace App\Http\Controllers\Api;
+
+	use App\Bookable;
+	use App\Http\Controllers\Controller;
+	use Illuminate\Http\Request;
+	use Illuminate\Support\Carbon;
+
+	class BookablePriceController extends Controller
+	{
+		/**
+		 * Handle the incoming request.
+		 *
+		 * @param  \Illuminate\Http\Request  $request
+		 * @return \Illuminate\Http\Response
+		 */
+		public function __invoke($id, Request $request)
+		{
+			$bookable = Bookable::findOrFail($id);
+
+
+			$data = $request->validate([
+				'from' => 'required|date_format:Y-m-d',
+				'to' => 'required|date_format:Y-m-d|after_or_equal:fro'
+			]);
+
+			
+			$days = (new Carbon($data['from']))->diffInDays(new Carbon($data['to'])) + 1;
+			$price = $days * $bookable->price;
+
+
+			return response()->json([
+				'data' => [
+					'total' => $price,
+					'breakdown' => [
+						$bookable->price => $days
+					]
+				]
+			]);
+		}
+	}
+
+
+
+
+
+-----------------
+In routes/api.php
+-----------------
+
+
+//--------------------------------------------------------------------------------------------------------------------------
+//  API ROUTES FOR BOOKABLE SINGLE ACTION CONTROLLER BOOKABLE PRICE CONTROLLER
+//
+Route::get('bookables/{bookable}/price', 'Api\BookablePriceController')->name('bookables.price.show');
+//--------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+//	To test in Postman use GET with this route and data
+//
+http://127.0.0.1:8000/api/bookables/1/price?from=2020-09-26&to=2020-10-07
+
+
+
+//	Remember to send the Header
+//
+
+
+	Key									Value 
+
+	Accept								application/json
+
+
+
+
+
+------
+Result
+------
+
+
+	{
+		"data": {
+			"total": 2100,
+			"breakdown": {
+				"175": 12
+			}
+		}
+	}
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//	Create model   Address  and its migration using this command
+//
+$ php artisan make:model Address -m
+
+
+
+
+
+//	Create migration   AddPriceAndAddressToBookingsTable   using this command
+//
+$ php artisan make:migration AddPriceAndAddressToBookingsTable
+
+
+
+
+
+*** WARNING ***		At this point you cant run   php artisan migrate:fresh --seed   because the factories are not set up for it and it will cause an error
+
+//	Run migrations with this command
+//
+$ php artisan migrate
+
+
+
+
+
+//	This command creates a   single action controller   these types of controllers only have a single action and that method
+//	name will always be   public function __invoke($id)   and this allows this controller class to be called like a function
+/
+$ php artisan make:controller Api/CheckoutController --invokable
+
+
+
+
+
+
+
+
+
+================================================================================================================================================================================================
+ADD LARAVEL SANCTUM WHICH IS A NEW LIGHT WEIGHT WAY TO AUTHETICATE A LARAVEL VUE SPA APPLICATION
+================================================================================================================================================================================================
+
+
+//	Install Laravel Sanctum via Composer using this command
+//
+$ composer require laravel/sanctum
+
+
+
+
+
+//	Next, you should publish the Sanctum configuration and migration files using 
+//	the   vendor:publish Artisan   command and the sanctum configuration file will be placed in your config directory
+//
+$ php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
+
+
+
+
+//	Next you should run your database migrations. Sanctum will create one database table in which to store API tokens
+//
+$ php artisan migrate
+
+
+
+
+
+//	Next, if you plan to utilize Sanctum to authenticate an SPA, you should add
+//	Sanctum's middleware to your api middleware group within your app/Http/Kernel.php file
+//
+
+
+
+//	Add this using statement at the top of the file
+//
+
+
+	use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+
+
+
+
+Next find the code :
+
+
+    protected $middlewareGroups = [
+        'web' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        'api' => [
+            'throttle:60,1',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+
+
+
+
+
+Change to :
+
+
+
+    protected $middlewareGroups = [
+        'web' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\Session\Middleware\AuthenticateSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        'api' => [
+            EnsureFrontendRequestsAreStateful::class,
+            'throttle:60,1',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+
+//	This will set Laravel Sanctum up to use localhost at 127.0.0.1 and the Laravel Development server at 127.0.0.1:8000
+//
+
+	
+    /*
+    |--------------------------------------------------------------------------
+    | Stateful Domains
+    |--------------------------------------------------------------------------
+    |
+    | Requests from the following domains / hosts will receive stateful API
+    | authentication cookies. Typically, these should include your local
+    | and production domains which access your API via a frontend SPA.
+    |
+    */
+
+    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', 'localhost,127.0.0.1,127.0.0.1:8000,::1')),
+	
+	
+	
+	
+	
+//	To run this on a production server you have to open your   .env   file and add the production server domain name there
+//
+
+Example with Laravel Sanctum added at the end :
+
+
+
+	APP_NAME=Laravel
+	APP_ENV=local
+	APP_KEY=base64:4q2vl8Si1p9L7hOGIWKXI9MiCyRP8z+OG2vfMdL1eZk=
+	APP_DEBUG=true
+	APP_URL=http://localhost
+
+	LOG_CHANNEL=stack
+
+	DB_CONNECTION=mysql
+	DB_HOST=127.0.0.1
+	DB_PORT=3306
+	DB_DATABASE=laravel_bnb
+	DB_USERNAME=root
+	DB_PASSWORD=
+
+	BROADCAST_DRIVER=log
+	CACHE_DRIVER=file
+	QUEUE_CONNECTION=sync
+	SESSION_DRIVER=file
+	SESSION_LIFETIME=120
+
+	REDIS_HOST=127.0.0.1
+	REDIS_PASSWORD=null
+	REDIS_PORT=6379
+
+	MAIL_MAILER=smtp
+	MAIL_HOST=smtp.mailtrap.io
+	MAIL_PORT=2525
+	MAIL_USERNAME=null
+	MAIL_PASSWORD=null
+	MAIL_ENCRYPTION=null
+	MAIL_FROM_ADDRESS=null
+	MAIL_FROM_NAME="${APP_NAME}"
+
+	AWS_ACCESS_KEY_ID=
+	AWS_SECRET_ACCESS_KEY=
+	AWS_DEFAULT_REGION=us-east-1
+	AWS_BUCKET=
+
+	PUSHER_APP_ID=
+	PUSHER_APP_KEY=
+	PUSHER_APP_SECRET=
+	PUSHER_APP_CLUSTER=mt1
+
+	MIX_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+	MIX_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+	SANCTUM_STATEFUL_DOMAINS=localhost,127.0.0.1,127.0.0.1:8000,{ YOUR OTHER DOMAIN HERE }
+
+
+
+
+
+//	Remember to save
+//
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+
+
+
+
+
+//	In order to move from localhost to a production server you have to adjust the CORS settings
+//	CORS is now in Laravel as standard under the fruitcake package so theres no need to install it only to adjust it
+//
+
+
+In directory   config/cors.php   find the line :
+
+
+    'supports_credentials' => false,
+	
+	
+	
+	
+	
+Change to :
+
+
+
+
+
+    'supports_credentials' => true,
+	
+	
+	
+	
+	
+The entire code of this file now looks like this :
+
+
+	<?php
+
+	return [
+
+		/*
+		|--------------------------------------------------------------------------
+		| Cross-Origin Resource Sharing (CORS) Configuration
+		|--------------------------------------------------------------------------
+		|
+		| Here you may configure your settings for cross-origin resource sharing
+		| or "CORS". This determines what cross-origin operations may execute
+		| in web browsers. You are free to adjust these settings as needed.
+		|
+		| To learn more: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+		|
+		*/
+
+		'paths' => ['api/*'],
+
+		'allowed_methods' => ['*'],
+
+		'allowed_origins' => ['*'],
+
+		'allowed_origins_patterns' => [],
+
+		'allowed_headers' => ['*'],
+
+		'exposed_headers' => [],
+
+		'max_age' => 0,
+
+		'supports_credentials' => true,
+
+	];
+
+
+
+
+
+//	You must also add more defaults to the Axios settings in the directory   resources/js/bootstrap.js   
+//
+
+
+In directory   resources/js/bootstrap.js   find the lines :
+
+
+	window.axios = require('axios');
+
+	window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+		
+	
+	
+	
+	
+Under them add this line to set more defaults :
+
+
+		window.axios.defaults.withCredentials = true;
+
+
+
+
+
+This part of the code now looks like this :
+
+
+	window.axios = require('axios');
+
+	window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+	window.axios.defaults.withCredentials = true;
+	
+	
+	
+
+
+//	Remember to save
+//
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+//	In web.php you must register the auth routes by make sure the
+//	code below both the use statement and    Auth::routes(); are present
+//
+
+	
+	use Illuminate\Support\Facades\Route;
+	
+	
+	Auth::routes();
+	
+	
+	
+	
+
+Example in this application the web.php directory looks like this :
+
+
+	<?php
+
+	use Illuminate\Support\Facades\Route;
+
+	/*
+	|------------------------------------------------------------------------------------------------------
+	| Web Routes
+	|------------------------------------------------------------------------------------------------------
+	|
+	| Here is where you can register web routes for your application. These
+	| routes are loaded by the RouteServiceProvider within a group which
+	| contains the "web" middleware group. Now create something great!
+	|
+	*/
+
+
+
+	Route::get('/{any?}', function () {
+		return view('index');
+	})->where('any', '^(?!api\/)[\/\w\.-]*');
+
+
+	Auth::routes();
+
+	//Route::get('/home', 'HomeController@index')->name('home');
+
+
+
+
+
+
+
+
+
+
+//	Remember to save
+//
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+
+
+//	Use this command to confirm Laravel Sanctum routes
+//
+$ php artisan route:list
+
+
+
+
+
+//	In api.php we must move the automatically created route provided by Laravel to web.php
+//
+
+
+In   api.php   find this code :
+
+
+	Route::middleware('auth:api')->get('/user', function (Request $request) {
+		return $request->user();
+	});
+	
+	
+	
+	
+	
+Change the code above to :
+
+
+
+
+
+	Route::middleware('auth')->get('/user', function (Request $request) {
+		return $request->user();
+	});
+
+
+
+	
+
+Move the code above to   web.php
+
+
+
+
+
+The code in web.php in this example looks like this :
+
+
+	<?php
+
+	use Illuminate\Http\Request;
+	use Illuminate\Support\Facades\Route;
+
+	/*
+	|------------------------------------------------------------------------------------------------------
+	| Web Routes
+	|------------------------------------------------------------------------------------------------------
+	|
+	| Here is where you can register web routes for your application. These
+	| routes are loaded by the RouteServiceProvider within a group which
+	| contains the "web" middleware group. Now create something great!
+	|
+	*/
+
+
+	Auth::routes();
+
+
+	Route::middleware('auth')->get('/user', function (Request $request) {
+		return $request->user();
+	});
+
+
+	Route::get('/{any?}', function () {
+		return view('index');
+	})->where('any', '^(?!api\/)[\/\w\.-]*');
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+//	Create seeder   UsersTableSeeder   using this command
+//
+$ php artisan make:seeder UsersTableSeeder
+
+
+
+
+
+//	Drop all tables and migrate fresh and seed the newly created tables using this command
+//
+$ php artisan migrate:fresh --seed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*** WARNING ***   Tailwind was not installed in this application and is only here for reference
+
+
+================================================================================================================================================================================================
+ADDING TAILWIND
+================================================================================================================================================================================================
+
+
+
+//	The Url for Tailwind website
+//
+https://tailwindcss.com/
+
+
+Go to the   Get Started   section which is found by left clicking the green button   Get Started
+
+
+------
+STEP 1
+------
+
+//	Use command   npm install tailwindcss --save-dev   to save it under the development dependencies
+//
+$ npm install tailwindcss --save-dev
+
+
+------
+STEP 2
+------
+
+
+//	Add this code to the top of the   app.scss   file located in directory resource/sass/app.scss
+//
+
+
+//  Tailwind Styles
+//
+@tailwind base;
+
+//  Tailwind Styles
+//
+@tailwind components;
+
+//  Tailwind Styles
+//
+@tailwind utilities;
+
+
+------
+STEP 3
+------
+
+
+//	Create a config file
+//
+npx tailwindcss init
+
+
+
+This now adds   tailwind.config.js   to the application which we need to add any
+additional customized requirements because without this file we cant compile the code
+
+
+------
+STEP 4
+------
+
+
+//	Process our CSS with sass options in the file   webpack.mix.js
+//
+
+  .options({
+    processCssUrls: false,
+    postCss: [ tailwindcss('./path/to/your/tailwind.config.js') ],
+  })
+  
+  
+  
+We only need to add the options part above because the code above it ios already present in the file   webpack.mix.js   in the application root directory
+
+So when added the entire code bl;ock looks like this :
+
+	//	This goes at the top of the file
+	//
+	const tailwindcss = require('tailwindcss');
+	
+
+	mix.js('resources/js/app.js', 'public/js')
+		.sass('resources/sass/app.scss', 'public/css')
+		.options({
+			processCssUrls: false,
+			postCss: [ 
+				tailwindcss('./tailwind.config.js') 
+			],
+		});
+		
+		
+		
+		
+
+The entire file then looks like this :
+
+
+
+
+
+	const mix = require('laravel-mix');
+	const tailwindcss = require('tailwindcss');
+
+	/*
+	 |--------------------------------------------------------------------------
+	 | Mix Asset Management
+	 |--------------------------------------------------------------------------
+	 |
+	 | Mix provides a clean, fluent API for defining some Webpack build steps
+	 | for your Laravel application. By default, we are compiling the Sass
+	 | file for the application as well as bundling up all the JS files.
+	 |
+	 */
+
+	mix.js('resources/js/app.js', 'public/js')
+		.sass('resources/sass/app.scss', 'public/css')
+		.options({
+			processCssUrls: false,
+			postCss: [ 
+				tailwindcss('./tailwind.config.js') 
+			],
+		});
+	
+	
+	
+	
+	
+------
+STEP 5
+------
+
+//	Run this command
+//
+$ npm run dev
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+

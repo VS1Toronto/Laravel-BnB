@@ -1,0 +1,29 @@
+================================================================================================================================================================================================
+INSTALL FONT AWESOME TO APPLICATION
+================================================================================================================================================================================================
+
+
+//	Install Font Awesome to application using this command
+//
+$ npm install --save @fortawesome/fontawesome-free
+
+
+
+
+
+//	Run this command to ensure all is ran through Vue compiler
+//
+$ npm run dev
+
+
+
+//	Add these lines to the resources/sass/app.scss
+//
+
+// Font awesome
+//
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+

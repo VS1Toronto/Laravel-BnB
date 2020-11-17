@@ -1,0 +1,14 @@
+-----------------------------------------------------------------------------------------------------
+TO USE AXIOS ONLINE WITH LARAVEL IN A SHARED SERVER ITS CALLS MUST BE SET TO TARGET THE PUBLIC FOLDER
+-----------------------------------------------------------------------------------------------------
+
+
+EXAMPLE :
+
+
+		axios
+			.get(`http://leedavidsoncontentmanagementsystem1.com/CodeLaravel7/public/api/bookables/${this.$route.params.id}`).then(response => {
+				this.bookable =  response.data.data;    // Using resources nests properties so .data.data needed here
+				this.loading = false;
+		});
+
